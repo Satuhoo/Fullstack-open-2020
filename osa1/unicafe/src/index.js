@@ -2,17 +2,24 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
 const Statistics = (props) => {
-  return (
-    <div>
-      <h1>statistics</h1>
+  if (props.all === 0) {
+    return (
+      <div>
+        <p>No feedback given</p>
+      </div>
+    )
+  } else {
+    return (
+      <div>
         <p>good {props.good}</p>
         <p>neutral {props.neutral} </p>
         <p>bad {props.bad} </p>
         <p>all {props.all}</p>
         <p>average {(props.good - props.bad) / props.all}</p>
         <p>positive {props.good * 100 / props.all}</p>
-    </div>
-  )
+      </div>
+    )
+  }
 }
 
 const App = () => {
@@ -41,6 +48,7 @@ const App = () => {
       <button onClick={handleGood}>good</button>
       <button onClick={handleNeutral}>neutral</button>
       <button onClick={handleBad}>bad</button>
+      <h1>statistics</h1>
       <Statistics good={good} neutral={neutral} bad={bad} all={all}/>
     </div>
   )
