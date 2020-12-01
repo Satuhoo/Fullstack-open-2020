@@ -1,8 +1,36 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
+const Button = (props) => {
+  return(
+    <button onClick={props.onClick}>
+      {props.text}
+    </button>
+  )
+}
+
+const Anecdote = (props) => {
+  return (
+    <div>
+      <p>{props.anecdotes[props.index]}</p>
+    </div>
+  )
+}
+
+const Points = (props) => {
+  return (
+    <div>
+      <p>has {props.points[props.index]} points</p>
+    </div>
+  )
+}
+
 const App = (props) => {
   const [selected, setSelected] = useState(0)
+  let arr = []
+  arr.length = props.anecdotes.length
+  arr.fill(0)
+  const [points, setPoints] = useState(arr)
 
   const selectIndex = () => {
     let max = props.anecdotes.length
@@ -10,10 +38,18 @@ const App = (props) => {
     setSelected(index)
   }
 
+  const addPoint = () => {
+    const copy = [...points]
+    copy[selected] += 1 
+    setPoints(copy)
+  }
+
   return (
     <div>
-      <p>{props.anecdotes[selected]}</p>
-      <button onClick={selectIndex}>next anecdote</button>
+      <Anecdote anecdotes={props.anecdotes} index={selected}/>
+      <Points points={points} index={selected}/>
+      <Button onClick={addPoint} text='vote'/>
+      <Button onClick={selectIndex} text='next anecdote'/>
     </div>
   )
 }
