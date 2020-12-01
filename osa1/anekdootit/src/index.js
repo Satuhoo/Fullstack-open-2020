@@ -32,6 +32,8 @@ const App = (props) => {
   arr.fill(0)
   const [points, setPoints] = useState(arr)
 
+  let mostVoted = points.indexOf(Math.max(...points))
+
   const selectIndex = () => {
     let max = props.anecdotes.length
     let index = Math.floor(Math.random() * max);
@@ -44,12 +46,17 @@ const App = (props) => {
     setPoints(copy)
   }
 
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <Anecdote anecdotes={props.anecdotes} index={selected}/>
       <Points points={points} index={selected}/>
       <Button onClick={addPoint} text='vote'/>
       <Button onClick={selectIndex} text='next anecdote'/>
+      <h1>Anecdote with most votes</h1>
+      <Anecdote anecdotes={props.anecdotes} index={mostVoted}/>
+      <Points points={points} index={mostVoted}/>
     </div>
   )
 }
