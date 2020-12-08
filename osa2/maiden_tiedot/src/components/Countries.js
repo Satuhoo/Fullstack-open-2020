@@ -13,7 +13,9 @@ const Filter = (props) => {
 const Country = (props) => {
   return (
     <div>
-      <p>{props.country.name}</p>
+      <p>{props.country.name} <button onClick={() => props.showCountry(props.country)}>
+          show
+        </button></p> 
     </div>
   )
 }
@@ -34,7 +36,7 @@ const CountryData = ({country}) => {
   )
 }
 
-const Countries = ({countriesToShow}) => {
+const Countries = ({countriesToShow, showCountry}) => {
   if (countriesToShow.length === 1) {
     return (
       <div>
@@ -44,7 +46,7 @@ const Countries = ({countriesToShow}) => {
   } else if (countriesToShow.length <= 10) {
     return (
       <div>
-        {countriesToShow.map(country => <Country key={country.name} country={country}/>)}
+        {countriesToShow.map(country => <Country key={country.name} country={country} showCountry={showCountry}/>)}
       </div>
     )
   } else {
