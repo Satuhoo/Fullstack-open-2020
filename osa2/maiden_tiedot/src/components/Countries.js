@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import '../App.css'
 
 const Filter = (props) => {
@@ -32,6 +33,7 @@ const CountryData = ({country}) => {
         {country.languages.map(value => <li key={value.name}> {value.name} </li>)}
       </ul>
       <img className='flag' src={country.flag} alt='Flag'/>
+      <Weather country={country}/>
     </div>
   )
 }
@@ -56,6 +58,35 @@ const Countries = ({countriesToShow, showCountry}) => {
       </div>
     )
   } 
+}
+
+const Weather = ({country}) => {
+    const [weather, setWeather] = useState({})
+    const api_key = process.env.REACT_APP_NOT_SECRET_CODE
+    const [loading, setLoading] = useState(true)
+
+    console.log(api_key)
+
+    useEffect(() => {
+        axios
+          .get(`http://api.openweathermap.org/data/2.5/weather?q=${country.capital}&appid=${api_key}`)
+          .then(response => {
+            setWeather(response.data)
+            setLoading(false)
+          })
+      }, [country.capital, api_key])
+
+    if (loading) return null
+
+    let temperature = Math.round(weather.main.temp - 273.15)
+    
+    return(
+        <div>
+            <h4>Weather in {country.capital}</h4>
+            <p>temperature: {temperature} Celsius</p>
+            <p>wind: {weather.wind.speed} m/s</p>
+        </div>
+    )
 }
 
 export {Countries, Filter}
