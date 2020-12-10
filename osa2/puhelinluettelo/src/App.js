@@ -1,39 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-
-const Person = ({person}) => {
-  return (
-    <div>
-      <p>{person.name} {person.number}</p>
-    </div>
-  )
-}
-
-const PersonForm = (props) => {
-  return (
-    <div>
-      <form onSubmit={props.addPerson}>
-        <div>
-          Name: <input value={props.newName} onChange={props.handleNameChange} />
-        </div>
-        <div>
-          Number: <input value={props.newNumber} onChange={props.handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">Add</button>
-        </div>
-      </form>
-    </div>
-  )
-}
-
-const Filter = (props) => {
-  return(
-    <div>
-      Filter shown with <input value={props.filter} onChange={props.handleFilterChange}/>
-    </div>
-  )
-}
+import { Person, PersonForm, Filter } from './components/Person'
+import personService from './services/persons'
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
@@ -43,10 +10,10 @@ const App = () => {
   const [ showAll, setShowAll ] = useState(true)
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    personService
+      .getPersons()
+      .then(data => {
+        setPersons(data)
       })
   }, [])
 
@@ -69,7 +36,6 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    console.log(event.target)
     const newPerson = {
       name: newName,
       number: newNumber
@@ -78,9 +44,13 @@ const App = () => {
     if (persons.some(obj => obj.name === newPerson.name)){
       alert(`${newPerson.name} is already added to phonebook`)
     } else {
-      setPersons(persons.concat(newPerson))
-      setNewName('')
-      setNewNumber('')
+      personService
+        .createPerson(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
     }
   }
 
